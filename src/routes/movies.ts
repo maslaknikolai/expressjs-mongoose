@@ -1,12 +1,12 @@
 import { Router } from "express";
-import { CountryModel, ICountry } from "../models/country";
+import { MovieModel, IMovie } from "../models/movie";
 
 const routes = Router();
 
 routes.get("/", async (req, res) => {
   try {
-    const countries: ICountry[] = await CountryModel.find().exec();
-    return res.json(countries);
+    const movies: IMovie[] = await MovieModel.find().exec();
+    return res.json(movies);
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "Sorry, something went wrong :/" });
@@ -15,20 +15,20 @@ routes.get("/", async (req, res) => {
 
 routes.post("/", async (req, res) => {
   try {
-    const country: ICountry = req.body;
+    const movie: IMovie = req.body;
 
-    const countryExists = await CountryModel.findOne({
-      name: country.name,
+    const isMovieExists = await MovieModel.findOne({
+      name: movie.name,
     }).exec();
 
-    if (countryExists) {
+    if (isMovieExists) {
       return res
         .status(409)
-        .json({ error: "There is already another country with this name" });
+        .json({ error: "There is already another movie with this name" });
     }
 
-    const newCountry = await CountryModel.create(country);
-    return res.status(201).json(newCountry);
+    const newMovie = await MovieModel.create(movie);
+    return res.status(201).json(newMovie);
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "Sorry, something went wrong :/" });
